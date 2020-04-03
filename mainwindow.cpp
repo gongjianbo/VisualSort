@@ -36,11 +36,13 @@ void MainWindow::initSettingBar()
         ui->canvas->dataReset(new BubbleSort(ui->canvas),ui->spinCount->value());
     });
     //排序开始
-    connect(ui->btnSort,&QPushButton::clicked,this,[this](bool checked){
+    connect(ui->btnSort,&QPushButton::clicked,this,[this]{
+        ui->canvas->startSort(ui->spinInterval->value());
+    });
+    connect(ui->btnSort,&QPushButton::toggled,this,[this](bool checked){
         ui->comboType->setEnabled(!checked);
         ui->spinCount->setEnabled(!checked);
         ui->spinInterval->setEnabled(!checked);
-        ui->canvas->startSort(ui->spinInterval->value());
     });
     //排序完
     connect(ui->canvas,&SortCanvas::finished,this,[this]{
