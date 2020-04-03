@@ -44,7 +44,7 @@ void SortCanvas::dataReset(SortObejct *sortObj, int count)
 void SortCanvas::startSort(int interval)
 {
     //开始排序
-    if(_sortObj&&!_sortObj->isFinish()){
+    if(_sortObj){
         _sortObj->runStart(interval);
     }else{
         emit finished();
