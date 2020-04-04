@@ -23,6 +23,7 @@ private:
     bool _isFinish=true;
     int _i=0;
     int _j=0;
+    int _jTemp=0;
     int _swapIndex=0;
 
     QTimer _sortTimer; //用于排序

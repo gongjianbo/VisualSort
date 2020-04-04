@@ -25,6 +25,7 @@ BubbleSort::BubbleSort(QObject *parent)
         if(_swapIndex+1<_sortData.count())
             std::swap(_sortData[_swapIndex],_sortData[_swapIndex+1]);
         _swapIndex=0;
+        _animationProgress=0;
         _sortTimer.start();
         emit sortUpdated();
     });
@@ -40,6 +41,7 @@ void BubbleSort::runStart(int interval)
 void BubbleSort::runStep()
 {
     //冒泡排序，两层循环，这里for替换为if，方便重入
+    //本来想尝试QEventLoop，但是中途退出报异常
     if(_i < _sortData.count()-1)
     {
         if ( _j < _sortData.count()-1-_i)
@@ -52,11 +54,12 @@ void BubbleSort::runStep()
                 _animationProgress=0;
                 _animationLine.start();
             }
-            ++_j;
+            _jTemp=_j++;
             return;
         }
         ++_i;
         _j=0;
+        _jTemp=0;
         return;
     }
     _isFinish=true;
@@ -85,38 +88,11 @@ void BubbleSort::paint(QPainter *painter, int width, int height)
     double item_left=0;
     double item_height=0;
 
-    if(_isFinish){
-        //绘制所有的数据条
-        for(int i=0;i<_sortData.count();i++)
-        {
-            item_left=left_space+i*(item_width+item_space);
-            item_height=height_factor*_sortData.at(i);
-            painter->fillRect(item_left,item_bottom-item_height,
-                              item_width,item_height,
-                              QColor(200,200,200));
-        }
-    }else{
-        //qDebug()<<_i<<_j;
+    if(!_isFinish&&(_jTemp<(_sortData.count()-1)||_swapIndex<(_sortData.count()-1))){
         //绘制待交换的数据条，绿色可交换，红色不可交换
-        int idx=0;
-        double item_left_1=0;
-        double item_left_2=0;
-
-        if(QTimeLine::Running==_animationLine.state()&&
-                _swapIndex>=0&&_swapIndex<(_sortData.count()-1)){
+        int idx=_jTemp;
+        if(QTimeLine::Running==_animationLine.state()){
             idx=_swapIndex;
-            item_left_1=left_space+idx*(item_width+item_space);
-            item_left_2=left_space+(idx+1)*(item_width+item_space);
-            const double animation_left=(item_left_2-item_left_1)*_animationProgress;
-            item_left_1+=animation_left;
-            item_left_2-=animation_left;
-        }else if(_j>=0&&_j<(_sortData.count()-1)){
-            idx=_j;
-            item_left_1=left_space+idx*(item_width+item_space);
-            item_left_2=left_space+(idx+1)*(item_width+item_space);
-        }else{
-            item_left_1=left_space+idx*(item_width+item_space);
-            item_left_2=left_space+(idx+1)*(item_width+item_space);
         }
 
         for(int i=0;i<_sortData.count();i++)
@@ -129,30 +105,43 @@ void BubbleSort::paint(QPainter *painter, int width, int height)
                               item_width,item_height,
                               QColor(200,200,200));
         }
-        //qDebug()<<_i<<_j<<_swapIndex<<idx;
-        //if(idx<0) return;
-        //第一个数据位置
+
+        const double item_left_1=left_space+idx*(item_width+item_space);
+        const double item_left_2=left_space+(idx+1)*(item_width+item_space);
         const double item_height_1=height_factor*_sortData.at(idx);
-        //第二个数据位置
         const double item_height_2=height_factor*_sortData.at(idx+1);
+        const double animation_offset=(item_left_2-item_left_1)*_animationProgress;
+
 
         //第一个数据
-        painter->fillRect(item_left_1,item_bottom-item_height_1,
+        painter->fillRect(item_left_1+animation_offset,item_bottom-item_height_1,
                           item_width,item_height_1,
                           QColor(250,170,0));
         const QString left_text=QString::number(_sortData.at(idx));
-        painter->drawText(item_left_1+item_width-painter->fontMetrics().width(left_text),
+        painter->drawText(item_left_1+animation_offset
+                          +(item_width-painter->fontMetrics().width(left_text))/2,
                           item_bottom+text_height+text_space,
                           left_text);
         //第二个数据
-        painter->fillRect(item_left_2,item_bottom-item_height_2,
+        painter->fillRect(item_left_2-animation_offset,item_bottom-item_height_2,
                           item_width,item_height_2,
                           (_sortData.at(idx)<_sortData.at(idx+1)
                            ?QColor(200,0,0)
                           :QColor(0,200,0)));
         const QString right_text=QString::number(_sortData.at(idx+1));
-        painter->drawText(item_left_2,
+        painter->drawText(item_left_2-animation_offset
+                          +(item_width-painter->fontMetrics().width(right_text))/2,
                           item_bottom+text_height+text_space,
                           right_text);
+    }else{
+        //绘制所有的数据条
+        for(int i=0;i<_sortData.count();i++)
+        {
+            item_left=left_space+i*(item_width+item_space);
+            item_height=height_factor*_sortData.at(i);
+            painter->fillRect(item_left,item_bottom-item_height,
+                              item_width,item_height,
+                              QColor(200,200,200));
+        }
     }
 }
