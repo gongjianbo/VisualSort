@@ -210,18 +210,7 @@ border-color: rgb(255, 170, 128);
           </widget>
          </item>
          <item>
-          <widget class="QComboBox" name="comboType">
-           <item>
-            <property name="text">
-             <string>冒泡排序</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>其他</string>
-            </property>
-           </item>
-          </widget>
+          <widget class="QComboBox" name="comboType"/>
          </item>
         </layout>
        </item>
