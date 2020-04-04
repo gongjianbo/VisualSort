@@ -16,6 +16,7 @@ SelectionSort::SelectionSort(QObject *parent)
         emit sortUpdated();
     });
 
+    //交换动画相关
     _animationLine.setFrameRange(0,100);
     connect(&_animationLine,&QTimeLine::frameChanged,this,[this](int frame){
         _animationProgress=frame/100.0;
@@ -36,10 +37,13 @@ void SelectionSort::runStart(int interval)
 {
     _isFinish=false;
     _sortTimer.start(interval);
+    //交换动画间隔根据距离设置
     //_animationLine.setDuration(interval);
 }
 
+
 /*
+一般选择排序写法
 template<typename T>
 void selection_sort(std::vector<T>& arr) {
         for (int i = 0; i < arr.size() - 1; i++) {
@@ -53,7 +57,7 @@ void selection_sort(std::vector<T>& arr) {
 */
 void SelectionSort::runStep()
 {
-    //冒泡排序，两层循环，这里for替换为if，方便重入
+    //选择排序，两层循环，这里for替换为if，方便重入
     if(_i < _sortData.count()-1)
     {
         if ( _j < _sortData.count())
@@ -127,6 +131,7 @@ void SelectionSort::paint(QPainter *painter, int width, int height)
                               QColor(200,200,200));
         }
 
+        //坐标的x值和元素的高度值
         const double item_left_m=left_space+m_idx*(item_width+item_space);
         const double item_left_i=left_space+i_idx*(item_width+item_space);
         const double item_left_j=left_space+j_idx*(item_width+item_space);

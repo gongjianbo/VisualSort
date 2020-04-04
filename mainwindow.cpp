@@ -46,6 +46,7 @@ void MainWindow::initSettingBar()
         ui->canvas->startSort(ui->spinInterval->value());
     });
     connect(ui->btnSort,&QPushButton::toggled,this,[this](bool checked){
+        //在排序的时候不能设置参数
         ui->comboType->setEnabled(!checked);
         ui->spinCount->setEnabled(!checked);
         ui->spinInterval->setEnabled(!checked);
