@@ -38,10 +38,23 @@ void BubbleSort::runStart(int interval)
     _animationLine.setDuration(interval);
 }
 
+/*
+一般的冒泡排序写法
+template<typename T>
+void bubble_sort(T arr[], int len)
+{
+    int i, j;  T temp;
+    for (i = 0; i < len - 1; i++)
+        for (j = 0; j < len - 1 - i; j++)
+        if (arr[j] > arr[j + 1])
+        {
+            std::swap(arr[j],arr[j+1]);
+        }
+}
+*/
 void BubbleSort::runStep()
 {
     //冒泡排序，两层循环，这里for替换为if，方便重入
-    //本来想尝试QEventLoop，但是中途退出报异常
     if(_i < _sortData.count()-1)
     {
         if ( _j < _sortData.count()-1-_i)
@@ -63,7 +76,6 @@ void BubbleSort::runStep()
         return;
     }
     _isFinish=true;
-    return;
 }
 
 bool BubbleSort::isFinish() const
