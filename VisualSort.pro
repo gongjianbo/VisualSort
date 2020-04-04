@@ -17,6 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     BubbleSort.cpp \
+    SelectionSort.cpp \
     SortCreator.cpp \
     SortObejct.cpp \
     main.cpp \
@@ -25,6 +26,7 @@ SOURCES += \
 
 HEADERS += \
     BubbleSort.h \
+    SelectionSort.h \
     SortCreator.h \
     SortObejct.h \
     mainwindow.h \

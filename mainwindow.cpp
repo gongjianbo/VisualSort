@@ -13,6 +13,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    qDebug()<<"C++/Python/Qt qq交流群：647637553";
+
     initSettingBar();
 }
 
