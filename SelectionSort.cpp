@@ -25,9 +25,10 @@ SelectionSort::SelectionSort(QObject *parent)
     connect(&_animationLine,&QTimeLine::finished,this,[this]{
         if(_iTemp<_sortData.count()&&_minTemp<_sortData.count())
             std::swap(_sortData[_iTemp],_sortData[_minTemp]);
-        _animationProgress=0.0;
+        _animationProgress=0;
         _iTemp=_i;
         _minTemp=_min;
+
         _sortTimer.start();
         emit sortUpdated();
     });
@@ -35,7 +36,7 @@ SelectionSort::SelectionSort(QObject *parent)
 
 void SelectionSort::runStart(int interval)
 {
-    _isFinish=false;
+    setFinish(false);
     _sortTimer.start(interval);
     //交换动画间隔根据距离设置
     //_animationLine.setDuration(interval);
@@ -85,13 +86,8 @@ void SelectionSort::runStep()
         _min=_i;
         return;
     }
-    _isFinish=true;
-    return;
-}
-
-bool SelectionSort::isFinish() const
-{
-    return _isFinish;
+    _sortTimer.stop();
+    setFinish(true);
 }
 
 void SelectionSort::paint(QPainter *painter, int width, int height)
@@ -112,7 +108,7 @@ void SelectionSort::paint(QPainter *painter, int width, int height)
     double item_height=0;
 
     //qDebug()<<_iTemp<<_jTemp<<_minTemp<<_animationProgress;
-    if(!_isFinish&&_minTemp<_sortData.count()&&
+    if(!isFinish()&&_minTemp<_sortData.count()&&
             _iTemp<_sortData.count()&&_jTemp<_sortData.count()){
         //min 和 第一层循环的 i 交换
         int i_idx=_iTemp;

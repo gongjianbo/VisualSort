@@ -26,14 +26,18 @@ BubbleSort::BubbleSort(QObject *parent)
             std::swap(_sortData[_swapIndex],_sortData[_swapIndex+1]);
         _swapIndex=0;
         _animationProgress=0;
+
         _sortTimer.start();
+        if(_sortTimer.interval()>50){
+            runStep();
+        }
         emit sortUpdated();
     });
 }
 
 void BubbleSort::runStart(int interval)
 {
-    _isFinish=false;
+    setFinish(false);
     _sortTimer.start(interval);
     _animationLine.setDuration(interval);
 }
@@ -43,15 +47,16 @@ void BubbleSort::runStart(int interval)
 template<typename T>
 void bubble_sort(T arr[], int len)
 {
-    int i, j;  T temp;
+    int i, j;
     for (i = 0; i < len - 1; i++)
         for (j = 0; j < len - 1 - i; j++)
-        if (arr[j] > arr[j + 1])
-        {
-            std::swap(arr[j],arr[j+1]);
-        }
+            if (arr[j] > arr[j + 1])
+            {
+                std::swap(arr[j],arr[j+1]);
+            }
 }
 */
+
 void BubbleSort::runStep()
 {
     //冒泡排序，两层循环，这里for替换为if，方便重入
@@ -75,12 +80,8 @@ void BubbleSort::runStep()
         _jTemp=0;
         return;
     }
-    _isFinish=true;
-}
-
-bool BubbleSort::isFinish() const
-{
-    return _isFinish;
+    _sortTimer.stop();
+    setFinish(true);
 }
 
 void BubbleSort::paint(QPainter *painter, int width, int height)
@@ -100,7 +101,7 @@ void BubbleSort::paint(QPainter *painter, int width, int height)
     double item_left=0;
     double item_height=0;
 
-    if(!_isFinish&&(_jTemp<(_sortData.count()-1)||_swapIndex<(_sortData.count()-1))){
+    if(!isFinish()&&(_jTemp<(_sortData.count()-1)||_swapIndex<(_sortData.count()-1))){
         //绘制待交换的数据条，绿色可交换，红色不可交换
         int idx=_jTemp;
         if(QTimeLine::Running==_animationLine.state()){

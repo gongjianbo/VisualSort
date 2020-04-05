@@ -22,3 +22,20 @@ void SortObejct::dataReset(int count)
 
     emit sortUpdated();
 }
+
+bool SortObejct::isFinish() const
+{
+    return _isFinish;
+}
+
+void SortObejct::setFinish(bool finish)
+{
+    if(_isFinish!=finish){
+        _isFinish=finish;
+        if(_isFinish){
+            emit sortFinished();
+        }else{
+            emit sortUpdated();
+        }
+    }
+}

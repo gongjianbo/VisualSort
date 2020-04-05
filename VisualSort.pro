@@ -1,6 +1,4 @@
-QT       += core gui
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT       += core gui widgets concurrent
 
 CONFIG += c++11 utf8_source
 
@@ -17,6 +15,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     BubbleSort.cpp \
+    QuickSort.cpp \
     SelectionSort.cpp \
     SortCreator.cpp \
     SortObejct.cpp \
@@ -26,6 +25,7 @@ SOURCES += \
 
 HEADERS += \
     BubbleSort.h \
+    QuickSort.h \
     SelectionSort.h \
     SortCreator.h \
     SortObejct.h \

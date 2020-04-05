@@ -5,6 +5,8 @@
 #include <QVector>
 #include <QPainter>
 
+#include <atomic>
+
 //排序的接口类
 class SortObejct : public QObject
 {
@@ -12,18 +14,22 @@ class SortObejct : public QObject
 public:
     explicit SortObejct(QObject *parent = nullptr);
 
-    void dataReset(int count);
+    virtual void dataReset(int count);
 
     virtual void runStart(int interval)=0;
     virtual void runStep()=0;
-    virtual bool isFinish() const=0;
+    virtual bool isFinish() const;
     virtual void paint(QPainter *painter,int width,int height)=0;
+
+protected:
+    void setFinish(bool finish);
 
 signals:
     void sortUpdated();
     void sortFinished();
 
 protected:
+    std::atomic<bool> _isFinish=true;
     QVector<int> _sortData;
 };
 

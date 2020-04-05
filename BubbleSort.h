@@ -16,11 +16,9 @@ public:
 
     void runStart(int interval) override;
     void runStep() override;
-    bool isFinish() const override;
     void paint(QPainter *painter, int width, int height) override;
 
 private:
-    bool _isFinish=true;
     int _i=0;
     int _j=0;
     int _jTemp=0;

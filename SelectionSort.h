@@ -16,11 +16,9 @@ public:
 
     void runStart(int interval) override;
     void runStep() override;
-    bool isFinish() const override;
     void paint(QPainter *painter, int width, int height) override;
 
 private:
-    bool _isFinish=true;
     //目前排序时一次性的，所以没有复位操作
     int _i=0;
     int _j=1;
