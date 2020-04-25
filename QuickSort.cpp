@@ -303,7 +303,7 @@ int QuickSort::doSortPart(int left, int right)
     return begin;  //返回pos位置
 }
 
-#if 0
+/*
 //挖坑填数
 int AdjustArray(int s[], int l, int r) //返回调整后基准数的位置
 {
@@ -344,4 +344,4 @@ void quick_sort1(int s[], int l, int r)
         quick_sort1(s, i + 1, r);
     }
 }
-#end if
+*/
