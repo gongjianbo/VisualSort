@@ -29,7 +29,7 @@ signals:
     void sortFinished();
 
 protected:
-    std::atomic<bool> _isFinish=true;
+    std::atomic<bool> _isFinish{false};
     QVector<int> _sortData;
 };
 

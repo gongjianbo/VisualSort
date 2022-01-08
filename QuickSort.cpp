@@ -3,6 +3,7 @@
 #include <QMutexLocker>
 #include <QtConcurrentRun>
 #include <QThread>
+#include <QPainterPath>
 #include <QDebug>
 
 QuickSort::QuickSort(QObject *parent)

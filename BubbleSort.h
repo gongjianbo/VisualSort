@@ -19,14 +19,14 @@ public:
     void paint(QPainter *painter, int width, int height) override;
 
 private:
-    int _i=0;
-    int _j=0;
-    int _jTemp=0;
-    int _swapIndex=0;
+    int _i{0};
+    int _j{0};
+    int _jTemp{0};
+    int _swapIndex{0};
 
     QTimer _sortTimer; //用于排序
 
-    double _animationProgress=0;
+    double _animationProgress{0};
     QTimeLine _animationLine; //用于动画
 };
 

@@ -32,18 +32,18 @@ private:
     //因为目前datareset是初始化时进行的，所以没有对其锁定
     QMutex _waitMutex;
     QWaitCondition _waitCondition;
-    std::atomic<bool> _runningFlag=false; //是否正在排序
+    std::atomic<bool> _runningFlag{false}; //是否正在排序
 
-    int _interval=1; //操作定时间隔
+    int _interval{1}; //操作定时间隔
     QTimer _sortTimer; //排序步骤定时器
 
-    int _leftTemp=0; //左边界
-    int _rightTemp=0; //右边界
-    int _beginTemp=0; //左指针
-    int _endTemp=0; //右指针
-    int _pitTemp=0; //坑位
+    int _leftTemp{0}; //左边界
+    int _rightTemp{0}; //右边界
+    int _beginTemp{0}; //左指针
+    int _endTemp{0}; //右指针
+    int _pitTemp{0}; //坑位
 
-    double _animationProgress=0;
+    double _animationProgress{0};
     QTimeLine _animationLine; //用于动画
 };
 

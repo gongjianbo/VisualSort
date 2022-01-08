@@ -20,16 +20,16 @@ public:
 
 private:
     //目前排序时一次性的，所以没有复位操作
-    int _i=0;
-    int _j=1;
-    int _min=0;
-    int _iTemp=0;
-    int _jTemp=1;
-    int _minTemp=0;
+    int _i{0};
+    int _j{1};
+    int _min{0};
+    int _iTemp{0};
+    int _jTemp{1};
+    int _minTemp{0};
 
     QTimer _sortTimer; //用于排序
 
-    double _animationProgress=0;
+    double _animationProgress{0};
     QTimeLine _animationLine; //用于动画
 };
 

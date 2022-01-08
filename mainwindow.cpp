@@ -14,8 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     qDebug()<<R"(
-Visual Sort 排序可视化Demo by 龚建波1992
-( C++/Python/Qt qq交流群：647637553 )
+Visual Sort 排序可视化Demo (by 龚建波1992)
               )";
 
     initSettingBar();

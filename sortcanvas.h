@@ -32,7 +32,7 @@ private:
     Ui::SortCanvas *ui;
 
 
-    SortObejct *_sortObj=nullptr;
+    SortObejct *_sortObj{nullptr};
 };
 
 #endif // SORTCANVAS_H

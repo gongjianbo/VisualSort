@@ -1,5 +1,6 @@
 #include "SelectionSort.h"
 
+#include <QPainterPath>
 #include <QDebug>
 
 SelectionSort::SelectionSort(QObject *parent)
