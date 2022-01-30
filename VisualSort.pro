@@ -1,6 +1,9 @@
-QT += core gui widgets concurrent
+QT += core
+QT += gui
+QT += widgets
 
-CONFIG += c++11 utf8_source
+CONFIG += c++11
+CONFIG += utf8_source
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -14,29 +17,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    BubbleSort.cpp \
-    QuickSort.cpp \
-    SelectionSort.cpp \
-    SortCreator.cpp \
-    SortObejct.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    sortcanvas.cpp
-
-HEADERS += \
-    BubbleSort.h \
-    QuickSort.h \
-    SelectionSort.h \
-    SortCreator.h \
-    SortObejct.h \
-    mainwindow.h \
-    sortcanvas.h
-
-FORMS += \
-    mainwindow.ui \
-    sortcanvas.ui
+    MainUI.cpp \
+    main.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+FORMS += \
+    MainUI.ui
+
+HEADERS += \
+    MainUI.h
