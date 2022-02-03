@@ -1,10 +1,13 @@
 #include <QApplication>
+#include "BubbleSimple.h"
 #include "MainUI.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    MainUI window;
+    BubbleSimple window;
     window.show();
+    //MainUI window;
+    //window.show();
     return app.exec();
 }
