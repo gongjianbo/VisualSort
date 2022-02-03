@@ -36,7 +36,25 @@ BubbleSimple::BubbleSimple(QWidget *parent)
     btn_stop->move(10, 60);
     connect(btn_stop, &QPushButton::clicked, this, &BubbleSimple::stop);
 
+    //因为loop是全局的，导致run函数不可重入，否则第一个run还没退出第二个又进去了
+    connect(this, &BubbleSimple::runFlagChanged, [=](bool flag){
+        btn_run->setEnabled(!flag);
+    });
+
     initArr();
+}
+
+bool BubbleSimple::getRunFlag() const
+{
+    return runFlag;
+}
+
+void BubbleSimple::setRunFlag(bool flag)
+{
+    if (runFlag != flag) {
+        runFlag = flag;
+        emit runFlagChanged(flag);
+    }
 }
 
 double BubbleSimple::getOffset() const
@@ -47,7 +65,7 @@ double BubbleSimple::getOffset() const
 void BubbleSimple::setOffset(double offset)
 {
     swapOffset = offset;
-    emit offsetChanged();
+    emit offsetChanged(offset);
     update();
 }
 
@@ -65,7 +83,7 @@ void BubbleSimple::paintEvent(QPaintEvent *event)
         //色块颜色
         QColor color = QColor(50, 50, 50);
         //在执行排序操作的时候标记比较的两个元素
-        if (runFlag) {
+        if (getRunFlag()) {
             if (i == arrJ) {
                 color = QColor(255, 170 , 0);
                 if (swapFlag) {
@@ -90,7 +108,6 @@ void BubbleSimple::paintEvent(QPaintEvent *event)
 
 void BubbleSimple::initArr()
 {
-    stop();
     arr = QVector<int>{8, 5, 6, 3, 1, 9, 4, 2, 7, 10};
     arrI = 0;
     arrJ = 0;
@@ -116,15 +133,15 @@ void BubbleSimple::run()
 {
     qDebug()<<"running";
     auto guard = qScopeGuard([this]{
-        runFlag = false;
+        setRunFlag(false);
         qDebug()<<"finished";
         update();
     });
     Q_UNUSED(guard)
 
+    stop();
     initArr();
-    runFlag = true;
-
+    setRunFlag(true);
 
     int len = arr.length();
     for (arrI = 0; arrI < len - 1; arrI++)
@@ -136,7 +153,7 @@ void BubbleSimple::run()
                 animation.start();
                 swapFlag = true;
                 loop.exec();
-                if (runFlag) {
+                if (getRunFlag()) {
                     qSwap(arr[arrJ], arr[arrJ + 1]);
                     swapFlag = false;
                 }
@@ -146,11 +163,11 @@ void BubbleSimple::run()
                 loop.exec();
             }
             update();
-            if (!runFlag) {
+            if (!getRunFlag()) {
                 return;
             }
         }
-        if (!runFlag) {
+        if (!getRunFlag()) {
             return;
         }
     }
@@ -158,7 +175,7 @@ void BubbleSimple::run()
 
 void BubbleSimple::stop()
 {
-    runFlag = false;
+    setRunFlag(false);
     animation.stop();
     loop.quit();
 }

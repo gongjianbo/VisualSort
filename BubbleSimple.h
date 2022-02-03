@@ -14,6 +14,9 @@ class BubbleSimple : public QWidget
 public:
     explicit BubbleSimple(QWidget *parent = nullptr);
 
+    bool getRunFlag() const;
+    void setRunFlag(bool flag);
+
     double getOffset() const;
     void setOffset(double offset);
 
@@ -26,7 +29,8 @@ private:
     void stop();
 
 signals:
-    void offsetChanged();
+    void runFlagChanged(bool running);
+    void offsetChanged(double offset);
 
 private:
     //=false时退出for循环
