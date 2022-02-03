@@ -18,7 +18,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     BubbleSimple.cpp \
+    BubbleSort.cpp \
+    MainCanvas.cpp \
     MainUI.cpp \
+    SortFactory.cpp \
+    SortObject.cpp \
     main.cpp
 
 # Default rules for deployment.
@@ -31,4 +35,8 @@ FORMS += \
 
 HEADERS += \
     BubbleSimple.h \
-    MainUI.h
+    BubbleSort.h \
+    MainCanvas.h \
+    MainUI.h \
+    SortFactory.h \
+    SortObject.h
