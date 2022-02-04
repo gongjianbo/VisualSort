@@ -1,4 +1,4 @@
-#include "BubbleSort.h"
+#include "SelectionSort.h"
 #include <algorithm>
 #include <cmath>
 #include <QtMath>
@@ -7,12 +7,13 @@
 #include <QTimer>
 #include <QPushButton>
 #include <QPainter>
+#include <QPainterPath>
 #include <QPaintEvent>
 #include <QScopeGuard>
 #include <QFontMetrics>
 #include <QDebug>
 
-BubbleSort::BubbleSort(QObject *parent)
+SelectionSort::SelectionSort(QObject *parent)
     : SortObject(parent)
 {
     //属性动画控制交换动画效果
@@ -25,32 +26,34 @@ BubbleSort::BubbleSort(QObject *parent)
     connect(&animation, &QPropertyAnimation::finished, &loop, &QEventLoop::quit);
 }
 
-double BubbleSort::getOffset() const
+double SelectionSort::getOffset() const
 {
     return swapOffset;
 }
 
-void BubbleSort::setOffset(double offset)
+void SelectionSort::setOffset(double offset)
 {
     swapOffset = offset;
     emit offsetChanged(offset);
     emit updateRequest();
 }
 
-/*//一般的冒泡排序写法
+/*//一般选择排序写法
 template<typename T>
-void bubble_sort(std::vector<T>& arr)
+void selection_sort(std::vector<T>& arr)
 {
     for (size_t i = 0; i < arr.size() - 1; i++) {
-        for (size_t j = 0; j < arr.size() - 1 - i; j++) {
-            if (arr[j] > arr[j + 1]) {
-                std::swap(arr[j],arr[j+1]);
+        size_t min = i;
+        for (size_t j = i + 1; j < arr.size(); j++) {
+            if (arr[j] < arr[min]) {
+                min = j;
             }
         }
+        std::swap(arr[i], arr[min]);
     }
 }*/
 
-void BubbleSort::sort(int count, int interval)
+void SelectionSort::sort(int count, int interval)
 {
     auto guard = qScopeGuard([this]{
         setRunFlag(false);
@@ -65,25 +68,28 @@ void BubbleSort::sort(int count, int interval)
     int len = arr.length();
     for (arrI = 0; arrI < len - 1; arrI++)
     {
-        for (arrJ = 0; arrJ < len - 1 - arrI; arrJ++)
+        arrMin = arrI;
+        for (arrJ = arrI + 1; arrJ < len; arrJ++)
         {
-            if (arr[arrJ] > arr[arrJ + 1]) {
-                animation.setDuration(interval * 3);
-                animation.start();
-                swapFlag = true;
-                loop.exec();
-                if (getRunFlag()) {
-                    qSwap(arr[arrJ], arr[arrJ + 1]);
-                    swapFlag = false;
-                }
-            } else {
-                animation.setDuration(interval);
-                animation.start();
-                loop.exec();
+            if (arr[arrJ] < arr[arrMin]) {
+                arrMin = arrJ;
             }
+            animation.setDuration(interval);
+            animation.start();
+            loop.exec();
             emit updateRequest();
             if (!getRunFlag()) {
                 return;
+            }
+        }
+        if (arrI != arrMin) {
+            animation.setDuration(interval * 3);
+            animation.start();
+            swapFlag = true;
+            loop.exec();
+            if (getRunFlag()) {
+                qSwap(arr[arrI], arr[arrMin]);
+                swapFlag = false;
             }
         }
         if (!getRunFlag()) {
@@ -92,7 +98,7 @@ void BubbleSort::sort(int count, int interval)
     }
 }
 
-void BubbleSort::stop()
+void SelectionSort::stop()
 {
     setRunFlag(false);
     animation.stop();
@@ -100,7 +106,7 @@ void BubbleSort::stop()
     emit updateRequest();
 }
 
-void BubbleSort::draw(QPainter *painter, int width, int height)
+void SelectionSort::draw(QPainter *painter, int width, int height)
 {
     painter->setPen(QColor(200, 200, 200));
     const int len = arr.length();
@@ -108,7 +114,7 @@ void BubbleSort::draw(QPainter *painter, int width, int height)
     const int left_space = 0;
     const int right_space = 0;
     const int top_space = 20;
-    const int bottom_space = 50;
+    const int bottom_space = 60;
 
     const int item_space = 10; //柱子横项间隔
     const int text_height = painter->fontMetrics().height();
@@ -128,19 +134,32 @@ void BubbleSort::draw(QPainter *painter, int width, int height)
         color = QColor(200, 200, 200);
         //在执行排序操作的时候标记比较的两个元素
         if (getRunFlag()) {
-            if (i == arrJ) {
+            if (i == arrI) {
                 color = QColor(255, 170 , 0);
                 if (swapFlag) {
-                    item_left += swapOffset * (item_width + item_space);
+                    item_left += swapOffset * (arrMin - arrI) * (item_width + item_space);
                 }
-            } else if (i == arrJ + 1) {
+            } else if (i == arrJ) {
                 color = QColor(0, 170 , 255);
-                if (swapFlag) {
-                    item_left -= swapOffset * (item_width + item_space);
-                }
-            } else if (i >= len - arrI) {
+            } else if (i < arrI) {
                 //已排序好的
                 color = QColor(0, 170, 0);
+            }
+            //最小这个数可能和i j重合，所以单独判断
+            if (i == arrMin) {
+                if (swapFlag) {
+                    item_left -= swapOffset * (arrMin - arrI) * (item_width + item_space);
+                }
+                //标记最小的数，在下方画一个三角
+                //painter->drawText(item_left, item_bottom + text_height * 2 + text_space, "Min");
+                //记录min的下标值
+                const double min_top = item_bottom + text_height + text_space * 2;
+                QPainterPath m_path;
+                m_path.moveTo(item_left + item_width / 2.0, min_top);
+                m_path.lineTo(item_left, min_top + item_width / 2.0);
+                m_path.lineTo(item_left + item_width, min_top + item_width / 2.0);
+                m_path.lineTo(item_left + item_width / 2.0, min_top);
+                painter->fillPath(m_path, QColor(0, 255, 0));
             }
         }
         //画文字
@@ -153,7 +172,7 @@ void BubbleSort::draw(QPainter *painter, int width, int height)
     }
 }
 
-void BubbleSort::initArr(int count)
+void SelectionSort::initArr(int count)
 {
     if (count < 2) {
         return;
@@ -169,6 +188,7 @@ void BubbleSort::initArr(int count)
 
     arrI = 0;
     arrJ = 0;
+    arrMin = 0;
     swapFlag = false;
     swapOffset = 0.0;
     emit updateRequest();

@@ -4,15 +4,15 @@
 #include <QEventLoop>
 #include <QPropertyAnimation>
 
-//冒泡排序
-//2022-2-3
-class BubbleSort : public SortObject
+//选择排序
+//2022-2-4
+class SelectionSort : public SortObject
 {
     Q_OBJECT
     //配合属性动画来控制交换元素的动画效果
     Q_PROPERTY(double offset READ getOffset WRITE setOffset NOTIFY offsetChanged)
 public:
-    explicit BubbleSort(QObject *parent = nullptr);
+    explicit SelectionSort(QObject *parent = nullptr);
 
     double getOffset() const;
     void setOffset(double offset);
@@ -39,8 +39,11 @@ private:
     //for循环下标
     int arrI{0};
     int arrJ{0};
+    //标记最小元素的下标
+    int arrMin{0};
     //标记当前交换状态
     bool swapFlag{false};
     //交换进度
     double swapOffset{0.0};
 };
+

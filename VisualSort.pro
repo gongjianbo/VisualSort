@@ -21,6 +21,7 @@ SOURCES += \
     BubbleSort.cpp \
     MainCanvas.cpp \
     MainUI.cpp \
+    SelectionSort.cpp \
     SortFactory.cpp \
     SortObject.cpp \
     main.cpp
@@ -38,5 +39,6 @@ HEADERS += \
     BubbleSort.h \
     MainCanvas.h \
     MainUI.h \
+    SelectionSort.h \
     SortFactory.h \
     SortObject.h
