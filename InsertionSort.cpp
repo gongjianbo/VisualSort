@@ -1,4 +1,4 @@
-#include "BubbleSort.h"
+#include "InsertionSort.h"
 #include <algorithm>
 #include <cmath>
 #include <QtMath>
@@ -12,7 +12,7 @@
 #include <QFontMetrics>
 #include <QDebug>
 
-BubbleSort::BubbleSort(QObject *parent)
+InsertionSort::InsertionSort(QObject *parent)
     : SortObject(parent)
 {
     //属性动画控制交换动画效果
@@ -25,32 +25,32 @@ BubbleSort::BubbleSort(QObject *parent)
     connect(&animation, &QPropertyAnimation::finished, &loop, &QEventLoop::quit);
 }
 
-double BubbleSort::getOffset() const
+double InsertionSort::getOffset() const
 {
     return swapOffset;
 }
 
-void BubbleSort::setOffset(double offset)
+void InsertionSort::setOffset(double offset)
 {
     swapOffset = offset;
     emit offsetChanged(offset);
     emit updateRequest();
 }
 
-/*//一般的冒泡排序写法
+/*//一般的插入排序写法
 template<typename T>
-void bubble_sort(std::vector<T>& arr)
+void insertion_sort(std::vector<T>& arr)
 {
-    for (size_t i = 0; i < arr.size() - 1; i++) {
-        for (size_t j = 0; j < arr.size() - 1 - i; j++) {
-            if (arr[j] > arr[j + 1]) {
-                std::swap(arr[j], arr[j + 1]);
+    for (size_t i = 1; i < arr.size(); i++) {
+        for (size_t j = i; j  > 0; j--) {
+            if (arr[j] < arr[j - 1]) {
+                std::swap(arr[j], arr[j - 1]);
             }
         }
     }
 }*/
 
-void BubbleSort::sort(int count, int interval)
+void InsertionSort::sort(int count, int interval)
 {
     auto guard = qScopeGuard([this]{
         setRunFlag(false);
@@ -63,20 +63,22 @@ void BubbleSort::sort(int count, int interval)
     setRunFlag(true);
 
     int len = arr.length();
-    for (arrI = 0; arrI < len - 1; arrI++)
+    for (arrI = 1; arrI < len; arrI++)
     {
-        for (arrJ = 0; arrJ < len - 1 - arrI; arrJ++)
+        for (arrJ = arrI; arrJ > 0; arrJ--)
         {
-            if (arr[arrJ] > arr[arrJ + 1]) {
+            if (arr[arrJ] < arr[arrJ - 1]) {
                 animation.setDuration(interval * 3);
                 animation.start();
                 swapFlag = true;
                 loop.exec();
                 if (getRunFlag()) {
-                    qSwap(arr[arrJ], arr[arrJ + 1]);
+                    qSwap(arr[arrJ], arr[arrJ - 1]);
                     swapFlag = false;
                 }
             } else {
+                //大于前面已排序好的数就不用交换了，=-1终止循环
+                arrJ = -1;
                 animation.setDuration(interval);
                 animation.start();
                 loop.exec();
@@ -92,7 +94,7 @@ void BubbleSort::sort(int count, int interval)
     }
 }
 
-void BubbleSort::stop()
+void InsertionSort::stop()
 {
     setRunFlag(false);
     animation.stop();
@@ -100,7 +102,7 @@ void BubbleSort::stop()
     emit updateRequest();
 }
 
-void BubbleSort::draw(QPainter *painter, int width, int height)
+void InsertionSort::draw(QPainter *painter, int width, int height)
 {
     painter->setPen(QColor(200, 200, 200));
     const int len = arr.length();
@@ -128,19 +130,20 @@ void BubbleSort::draw(QPainter *painter, int width, int height)
         color = QColor(200, 200, 200);
         //在执行排序操作的时候标记比较的两个元素
         if (getRunFlag()) {
-            if (i == arrJ) {
-                color = QColor(255, 170 , 0);
+            if (i <=  arrI) {
+                //已排序好的
+                color = QColor(0, 170, 0);
+            }
+            if (i == arrJ - 1) {
+                //color = QColor(255, 170 , 0);
                 if (swapFlag) {
                     item_left += swapOffset * (item_width + item_space);
                 }
-            } else if (i == arrJ + 1) {
+            } else if (i == arrJ) {
                 color = QColor(0, 170 , 255);
                 if (swapFlag) {
                     item_left -= swapOffset * (item_width + item_space);
                 }
-            } else if (i >= len - arrI) {
-                //已排序好的
-                color = QColor(0, 170, 0);
             }
         }
         //画文字
@@ -153,7 +156,7 @@ void BubbleSort::draw(QPainter *painter, int width, int height)
     }
 }
 
-void BubbleSort::initArr(int count)
+void InsertionSort::initArr(int count)
 {
     if (count < 2) {
         return;

@@ -19,6 +19,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     BubbleSimple.cpp \
     BubbleSort.cpp \
+    InsertionSort.cpp \
     MainCanvas.cpp \
     MainUI.cpp \
     SelectionSort.cpp \
@@ -37,6 +38,7 @@ FORMS += \
 HEADERS += \
     BubbleSimple.h \
     BubbleSort.h \
+    InsertionSort.h \
     MainCanvas.h \
     MainUI.h \
     SelectionSort.h \
