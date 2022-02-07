@@ -15,21 +15,23 @@ int MainCanvas::getSortType() const
 
 void MainCanvas::setSortObject(int type, SortObject *obj)
 {
-    if (sortType != type) {
-        if (sortObj) {
-            sortObj->deleteLater();
-            sortObj = nullptr;
-        }
+    if (sortType == type) {
+        return;
+    }
+    //删除旧的排序
+    if (sortObj) {
+        sortObj->deleteLater();
+        sortObj = nullptr;
+    }
 
-        sortType = type;
-        sortObj = obj;
+    sortType = type;
+    sortObj = obj;
 
-        if (sortObj) {
-            connect(sortObj, &SortObject::updateRequest, this, [this]{
-                update();
-            });
-            connect(sortObj, &SortObject::runFlagChanged, this, &MainCanvas::runFlagChanged);
-        }
+    if (sortObj) {
+        connect(sortObj, &SortObject::updateRequest, this, [this]{
+            update();
+        });
+        connect(sortObj, &SortObject::runFlagChanged, this, &MainCanvas::runFlagChanged);
     }
     update();
 }

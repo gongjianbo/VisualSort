@@ -51,10 +51,11 @@ bool BubbleSimple::getRunFlag() const
 
 void BubbleSimple::setRunFlag(bool flag)
 {
-    if (runFlag != flag) {
-        runFlag = flag;
-        emit runFlagChanged(flag);
+    if (runFlag == flag) {
+        return;
     }
+    runFlag = flag;
+    emit runFlagChanged(flag);
 }
 
 void BubbleSimple::paintEvent(QPaintEvent *event)

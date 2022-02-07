@@ -6,6 +6,7 @@ class MainUI;
 }
 
 //主窗口
+//龚建波 2022-2-3
 class MainUI : public QMainWindow
 {
     Q_OBJECT

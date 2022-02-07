@@ -5,7 +5,7 @@
 #include <QVariantAnimation>
 
 //冒泡排序
-//2022-2-3
+//龚建波 2022-2-3
 class BubbleSort : public SortObject
 {
     Q_OBJECT

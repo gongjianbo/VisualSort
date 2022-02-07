@@ -13,8 +13,9 @@ bool SortObject::getRunFlag() const
 
 void SortObject::setRunFlag(bool flag)
 {
-    if (runFlag != flag) {
-        runFlag = flag;
-        emit runFlagChanged(flag);
+    if (runFlag == flag) {
+        return;
     }
+    runFlag = flag;
+    emit runFlagChanged(flag);
 }
