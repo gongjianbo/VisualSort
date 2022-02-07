@@ -2,10 +2,7 @@
 #include <algorithm>
 #include <cmath>
 #include <QtMath>
-#include <QEventLoop>
 #include <QTime>
-#include <QTimer>
-#include <QPushButton>
 #include <QPainter>
 #include <QPainterPath>
 #include <QPaintEvent>
@@ -18,24 +15,12 @@ SelectionSort::SelectionSort(QObject *parent)
 {
     //属性动画控制交换动画效果
     //animation.setDuration(2000);
-    animation.setTargetObject(this);
-    animation.setPropertyName("offset");
     animation.setStartValue(0.0);
     animation.setEndValue(1.0);
     animation.setEasingCurve(QEasingCurve::OutQuart);
-    connect(&animation, &QPropertyAnimation::finished, &loop, &QEventLoop::quit);
-}
-
-double SelectionSort::getOffset() const
-{
-    return swapOffset;
-}
-
-void SelectionSort::setOffset(double offset)
-{
-    swapOffset = offset;
-    emit offsetChanged(offset);
-    emit updateRequest();
+    animation.setLoopCount(1);
+    connect(&animation, &QVariantAnimation::finished, &loop, &QEventLoop::quit);
+    connect(&animation, &QVariantAnimation::valueChanged, this, &SortObject::updateRequest);
 }
 
 /*//一般选择排序写法
@@ -137,7 +122,8 @@ void SelectionSort::draw(QPainter *painter, int width, int height)
             if (i == arrI) {
                 color = QColor(255, 170 , 0);
                 if (swapFlag) {
-                    item_left += swapOffset * (arrMin - arrI) * (item_width + item_space);
+                    item_left += animation.currentValue().toDouble() *
+                            (arrMin - arrI) * (item_width + item_space);
                 }
             } else if (i == arrJ) {
                 color = QColor(0, 170 , 255);
@@ -148,7 +134,8 @@ void SelectionSort::draw(QPainter *painter, int width, int height)
             //最小这个数可能和i j重合，所以单独判断
             if (i == arrMin) {
                 if (swapFlag) {
-                    item_left -= swapOffset * (arrMin - arrI) * (item_width + item_space);
+                    item_left -= animation.currentValue().toDouble() *
+                            (arrMin - arrI) * (item_width + item_space);
                 }
                 //标记最小的数，在下方画一个三角
                 //painter->drawText(item_left, item_bottom + text_height * 2 + text_space, "Min");
@@ -190,6 +177,5 @@ void SelectionSort::initArr(int count)
     arrJ = 0;
     arrMin = 0;
     swapFlag = false;
-    swapOffset = 0.0;
     emit updateRequest();
 }

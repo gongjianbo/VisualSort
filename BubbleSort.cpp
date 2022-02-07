@@ -2,10 +2,7 @@
 #include <algorithm>
 #include <cmath>
 #include <QtMath>
-#include <QEventLoop>
 #include <QTime>
-#include <QTimer>
-#include <QPushButton>
 #include <QPainter>
 #include <QPaintEvent>
 #include <QScopeGuard>
@@ -17,24 +14,12 @@ BubbleSort::BubbleSort(QObject *parent)
 {
     //属性动画控制交换动画效果
     //animation.setDuration(2000);
-    animation.setTargetObject(this);
-    animation.setPropertyName("offset");
     animation.setStartValue(0.0);
     animation.setEndValue(1.0);
     animation.setEasingCurve(QEasingCurve::OutQuart);
-    connect(&animation, &QPropertyAnimation::finished, &loop, &QEventLoop::quit);
-}
-
-double BubbleSort::getOffset() const
-{
-    return swapOffset;
-}
-
-void BubbleSort::setOffset(double offset)
-{
-    swapOffset = offset;
-    emit offsetChanged(offset);
-    emit updateRequest();
+    animation.setLoopCount(1);
+    connect(&animation, &QVariantAnimation::finished, &loop, &QEventLoop::quit);
+    connect(&animation, &QVariantAnimation::valueChanged, this, &SortObject::updateRequest);
 }
 
 /*//一般的冒泡排序写法
@@ -131,12 +116,12 @@ void BubbleSort::draw(QPainter *painter, int width, int height)
             if (i == arrJ) {
                 color = QColor(255, 170 , 0);
                 if (swapFlag) {
-                    item_left += swapOffset * (item_width + item_space);
+                    item_left += animation.currentValue().toDouble() * (item_width + item_space);
                 }
             } else if (i == arrJ + 1) {
                 color = QColor(0, 170 , 255);
                 if (swapFlag) {
-                    item_left -= swapOffset * (item_width + item_space);
+                    item_left -= animation.currentValue().toDouble() * (item_width + item_space);
                 }
             } else if (i >= len - arrI) {
                 //已排序好的
@@ -170,6 +155,5 @@ void BubbleSort::initArr(int count)
     arrI = 0;
     arrJ = 0;
     swapFlag = false;
-    swapOffset = 0.0;
     emit updateRequest();
 }

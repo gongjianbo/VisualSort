@@ -2,9 +2,7 @@
 #include <algorithm>
 #include <cmath>
 #include <QtMath>
-#include <QEventLoop>
 #include <QTime>
-#include <QTimer>
 #include <QPushButton>
 #include <QPainter>
 #include <QPaintEvent>
@@ -19,12 +17,14 @@ BubbleSimple::BubbleSimple(QWidget *parent)
 
     //属性动画控制交换动画效果
     //animation.setDuration(2000);
-    animation.setTargetObject(this);
-    animation.setPropertyName("offset");
     animation.setStartValue(0.0);
     animation.setEndValue(1.0);
     animation.setEasingCurve(QEasingCurve::OutQuart);
-    connect(&animation, &QPropertyAnimation::finished, &loop, &QEventLoop::quit);
+    animation.setLoopCount(1);
+    connect(&animation, &QVariantAnimation::finished, &loop, &QEventLoop::quit);
+    connect(&animation, &QVariantAnimation::valueChanged, this, [this]{
+        update();
+    });
 
     //点击执行排序
     QPushButton *btn_run = new QPushButton("run", this);
@@ -57,18 +57,6 @@ void BubbleSimple::setRunFlag(bool flag)
     }
 }
 
-double BubbleSimple::getOffset() const
-{
-    return swapOffset;
-}
-
-void BubbleSimple::setOffset(double offset)
-{
-    swapOffset = offset;
-    emit offsetChanged(offset);
-    update();
-}
-
 void BubbleSimple::paintEvent(QPaintEvent *event)
 {
     event->accept();
@@ -87,12 +75,12 @@ void BubbleSimple::paintEvent(QPaintEvent *event)
             if (i == arrJ) {
                 color = QColor(255, 170 , 0);
                 if (swapFlag) {
-                    x_offset += swapOffset * spacing;
+                    x_offset += animation.currentValue().toDouble() * spacing;
                 }
             } else if (i == arrJ + 1) {
                 color = QColor(0, 170 , 255);
                 if (swapFlag) {
-                    x_offset -= swapOffset * spacing;
+                    x_offset -= animation.currentValue().toDouble() * spacing;
                 }
             } else if (i >= len - arrI) {
                 //已排序好的
@@ -112,7 +100,6 @@ void BubbleSimple::initArr()
     arrI = 0;
     arrJ = 0;
     swapFlag = false;
-    swapOffset = 0.0;
     update();
 }
 
