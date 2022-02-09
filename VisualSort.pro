@@ -22,6 +22,7 @@ SOURCES += \
     InsertionSort.cpp \
     MainCanvas.cpp \
     MainUI.cpp \
+    QuickSort.cpp \
     SelectionSort.cpp \
     SortFactory.cpp \
     SortObject.cpp \
@@ -41,6 +42,7 @@ HEADERS += \
     InsertionSort.h \
     MainCanvas.h \
     MainUI.h \
+    QuickSort.h \
     SelectionSort.h \
     SortFactory.h \
     SortObject.h
