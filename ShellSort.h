@@ -4,13 +4,12 @@
 #include <QEventLoop>
 #include <QVariantAnimation>
 
-//选择排序
-//龚建波 2022-2-4
-class SelectionSort : public SortObject
+//希尔排序
+//龚建波 2022-2-12
+class ShellSort : public SortObject
 {
-    Q_OBJECT
 public:
-    explicit SelectionSort(QObject *parent = nullptr);
+    explicit ShellSort(QObject *parent = nullptr);
 
     //开始排序
     //count元素个数，interval动画持续时间参考值
@@ -31,9 +30,7 @@ private:
     //for循环下标
     int arrI{0};
     int arrJ{0};
-    //标记最小元素的下标
-    int arrMin{0};
+    int arrGap{0};
     //标记当前交换状态
     bool swapFlag{false};
 };
-

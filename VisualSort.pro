@@ -24,6 +24,7 @@ SOURCES += \
     MainUI.cpp \
     QuickSort.cpp \
     SelectionSort.cpp \
+    ShellSort.cpp \
     SortFactory.cpp \
     SortObject.cpp \
     main.cpp
@@ -44,5 +45,6 @@ HEADERS += \
     MainUI.h \
     QuickSort.h \
     SelectionSort.h \
+    ShellSort.h \
     SortFactory.h \
     SortObject.h
