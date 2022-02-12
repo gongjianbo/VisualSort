@@ -159,9 +159,9 @@ void ShellSort::draw(QPainter *painter, int width, int height)
     }
     //底部画当前的连线
     if (getRunFlag()) {
-        painter->setPen(QPen(QColor(255, 170 , 0), 3));
-        int y_top = height - 25;
-        int y_bottom = height - 10;
+        painter->setPen(QPen(QColor(255, 170 , 0), 2));
+        int y_top = height - 20;
+        int y_bottom = height - 8;
         int first_i = arrI % arrGap;
         int last_i = 0;
         for (int i = 0; i < len; i++)
@@ -176,6 +176,16 @@ void ShellSort::draw(QPainter *painter, int width, int height)
         int left = left_space + first_i * (item_width + item_space) + item_width / 2;
         int right = left_space + last_i * (item_width + item_space) + item_width / 2;
         painter->drawLine(left, y_bottom, right, y_bottom);
+
+        //标记i位置
+        item_left = left_space + arrI * (item_width + item_space);
+        const double loop_top = height - 24;
+        QPainterPath m_path;
+        m_path.moveTo(item_left + item_width / 2.0, loop_top);
+        m_path.lineTo(item_left, loop_top + item_width / 2.0);
+        m_path.lineTo(item_left + item_width, loop_top + item_width / 2.0);
+        m_path.lineTo(item_left + item_width / 2.0, loop_top);
+        painter->fillPath(m_path, QColor(0, 255, 0));
     }
 }
 
